@@ -52,6 +52,7 @@ protected:
 	std::list<FVector>::iterator velocitiesIter;
 	float mult = 50.0;
 	FVector InitialPos;
+	FVector oldVelocity;
 	bool recording;
 	bool recorded;
 	bool playingBack;

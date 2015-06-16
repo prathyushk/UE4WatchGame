@@ -56,12 +56,15 @@ void AWatchGameCharacter::Tick(float DeltaTime)
 	if (playingBack)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("PLAYING BACK VELOCITY: %s"), *velocitiesIter->ToString());
-		GetMovementComponent()->Velocity = *velocitiesIter*DeltaTime*mult;
+		FVector newVel = *velocitiesIter*DeltaTime*mult;
+		LaunchCharacter(newVel-oldVelocity,false,false);
 		++velocitiesIter;
+		oldVelocity = newVel;
 		if (velocitiesIter == storedVelocities.end())
 		{
 			playingBack = false;
 			velocitiesIter = storedVelocities.begin();
+			oldVelocity = FVector(0, 0, 0);
 		}
 	}
 	if (recording)
@@ -122,13 +125,13 @@ void AWatchGameCharacter::DecreaseMult()
 
 void AWatchGameCharacter::Playback()
 {
-	if (recorded)
+	if (recorded && !recording)
 		playingBack = true;
 }
 
 void AWatchGameCharacter::OnFire()
 { 
-	if (!recording)
+	if (!recording && !playingBack)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("STARTING RECORDING"));
 		//TotalTime = 0;
@@ -145,6 +148,7 @@ void AWatchGameCharacter::OnFire()
 		recording = false;
 		recorded = true;
 		velocitiesIter = storedVelocities.begin();
+		oldVelocity = FVector(0, 0, 0);
 	}
 	//// try and fire a projectile
 	//if (ProjectileClass != NULL)
