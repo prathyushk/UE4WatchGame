@@ -59,11 +59,14 @@ void AWatchGameCharacter::Tick(float DeltaTime)
 		GetMovementComponent()->Velocity = *velocitiesIter*DeltaTime*mult;
 		++velocitiesIter;
 		if (velocitiesIter == storedVelocities.end())
+		{
 			playingBack = false;
+			velocitiesIter = storedVelocities.begin();
+		}
 	}
 	if (recording)
 	{	
-		UE_LOG(LogTemp, Warning, TEXT("RECORDING"));
+		UE_LOG(LogTemp, Warning, TEXT("RECORDING VELOCITY: %s"), *(GetMovementComponent()->Velocity / DeltaTime).ToString());
 		//TotalTime += DeltaTime;
 		storedVelocities.push_back(GetMovementComponent()->Velocity/DeltaTime);
 	}
@@ -102,6 +105,11 @@ void AWatchGameCharacter::SetupPlayerInputComponent(class UInputComponent* Input
 	InputComponent->BindAxis("LookUpRate", this, &AWatchGameCharacter::LookUpAtRate);
 }
 
+bool AWatchGameCharacter::IsRecording()
+{
+	return recording;
+}
+
 void AWatchGameCharacter::IncreaseMult()
 {
 	mult++;
@@ -127,7 +135,7 @@ void AWatchGameCharacter::OnFire()
 		InitialPos = GetActorLocation();
 		recording = true;
 		storedVelocities.clear();
-		velocitiesIter = storedVelocities.begin();
+		
 	}
 	else
 	{
@@ -136,6 +144,7 @@ void AWatchGameCharacter::OnFire()
 		SetActorLocation(InitialPos);
 		recording = false;
 		recorded = true;
+		velocitiesIter = storedVelocities.begin();
 	}
 	//// try and fire a projectile
 	//if (ProjectileClass != NULL)

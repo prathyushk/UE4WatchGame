@@ -30,7 +30,12 @@ void AWatchGameHUD::DrawHUD()
 
 	// draw the crosshair
 	AWatchGameCharacter* player = Cast<AWatchGameCharacter>(GetOwningPlayerController()->GetPawn());
-	DrawText(FString::SanitizeFloat(player->GetMult()), FColor::Red, 50, 50, NULL);
+	if (player)
+	{
+		DrawText(FString::SanitizeFloat(player->GetMult()), FColor::Red, 50, 50, NULL);
+		if (player->IsRecording())
+			DrawText(TEXT("Recording"), FColor::Red, 50, 65, NULL);
+	}
 	FCanvasTileItem TileItem( CrosshairDrawPosition, CrosshairTex->Resource, FLinearColor::White);
 	TileItem.BlendMode = SE_BLEND_Translucent;
 	Canvas->DrawItem( TileItem );
