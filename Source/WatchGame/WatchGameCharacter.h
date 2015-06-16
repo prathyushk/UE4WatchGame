@@ -50,7 +50,7 @@ public:
 protected:
 	std::list<FVector> storedVelocities;
 	std::list<FVector>::iterator velocitiesIter;
-	float mult = 50.0;
+	float mult = 1.0;
 	FVector InitialPos;
 	FVector oldVelocity;
 	bool recording;

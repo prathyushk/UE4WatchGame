@@ -115,12 +115,24 @@ bool AWatchGameCharacter::IsRecording()
 
 void AWatchGameCharacter::IncreaseMult()
 {
-	mult++;
+	if (mult < 1)
+		mult+=0.1;
+	else
+	{
+		if (mult < 10)
+			mult++;
+	}
 }
 
 void AWatchGameCharacter::DecreaseMult()
 {
-	mult--;
+	if (mult > 1)
+		mult--;
+	else
+	{
+		if (mult > 0)
+			mult -= 0.1;
+	}
 }
 
 void AWatchGameCharacter::Playback()
